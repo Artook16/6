@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
-
 def F_rec(n):
     if n == 1:
         return 1
