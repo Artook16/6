@@ -19,8 +19,8 @@ def F_G_iter(n):
     G = [0] * (n + 1)
     F[1] = G[1] = 1
 
-    fact_n = 1  # n!
-    fact_n1 = 1  # (n-1)!
+    fact_n = 1 
+    fact_n1 = 1  
 
     for i in range(2, n + 1):
         fact_n1 = fact_n        
