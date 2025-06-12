@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
-# ---------- Рекурсивные функции ----------
 
 def F_rec(n):
     if n == 1:
@@ -16,7 +15,6 @@ def G_rec(n):
         return 1
     return math.factorial(n - 1) + G_rec(n - 1)
 
-# ---------- Итеративная реализация ----------
 def F_G_iter(n):
     F = [0] * (n + 1)
     G = [0] * (n + 1)
@@ -26,15 +24,14 @@ def F_G_iter(n):
     fact_n1 = 1  # (n-1)!
 
     for i in range(2, n + 1):
-        fact_n1 = fact_n        # (n-1)! = n! предыдущего шага
-        fact_n *= i             # n! = (n-1)! * i
+        fact_n1 = fact_n        
+        fact_n *= i             
         sign = -1 if i % 2 == 1 else 1
         G[i] = fact_n1 + G[i - 1]
         F[i] = sign * (fact_n // F[i - 1] - G[i - 1])
 
     return F[n], G[n]
 
-# ---------- Сравнение времени ----------
 results = []
 for i in range(2, 20):
     try:
@@ -44,11 +41,9 @@ for i in range(2, 20):
     t_itr = timeit.timeit(lambda: F_G_iter(i), number=1)
     results.append((i, t_rec, t_itr))
 
-# ---------- Таблица ----------
 df = pd.DataFrame(results, columns=["n", "Рекурсивное время (сек)", "Итеративное время (сек)"])
 print(df)
 
-# ---------- График ----------
 plt.figure(figsize=(10, 6))
 plt.plot(df["n"], df["Рекурсивное время (сек)"], label="Рекурсия", marker='o', color='blue')
 plt.plot(df["n"], df["Итеративное время (сек)"], label="Итерация", marker='s', color='green')
