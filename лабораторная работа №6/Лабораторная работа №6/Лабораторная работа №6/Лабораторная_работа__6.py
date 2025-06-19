@@ -1,56 +1,54 @@
+import math
 import timeit
 import matplotlib.pyplot as plt
-import pandas as pd
-import math
 
-def F_rec(n):
-    if n == 1:
+def sign(n):
+    return 1 if n % 2 == 0 else -1
+
+def F_recursive(n):
+    if n < 2:
         return 1
-    sign = -1 if n % 2 == 1 else 1
-    return sign * (math.factorial(n) // F_rec(n - 1) - G_rec(n - 1))
+    return sign(n) * (F_recursive(n - 1) / math.factorial(2 * n)  - math.cos(F_recursive(n - 2) + 2))
 
-def G_rec(n):
-    if n == 1:
+def F_iterative(n):
+    if n < 2:
         return 1
-    return math.factorial(n - 1) + G_rec(n - 1)
-
-def F_G_iter(n):
-    F = [0] * (n + 1)
-    G = [0] * (n + 1)
-    F[1] = G[1] = 1
-
-    fact_n = 1 
-    fact_n1 = 1  
-
+    f2, f1 = 1, 1
+    fact = 2
     for i in range(2, n + 1):
-        fact_n1 = fact_n        
-        fact_n *= i             
-        sign = -1 if i % 2 == 1 else 1
-        G[i] = fact_n1 + G[i - 1]
-        F[i] = sign * (fact_n // F[i - 1] - G[i - 1])
+        fact *= (2*i - 1) * (2*i)
+        cur = sign(i) * (f1 / fact - math.cos(f2 + 2))
+        f2, f1 = f1, cur
+    return f1
 
-    return F[n], G[n]
+def main():
+    start_n = 1
+    end_n = 25
+    results = []
+    for n in range(start_n, end_n + 1):
+        tr = timeit.timeit(lambda: F_recursive(n), number=10)
+        ti = timeit.timeit(lambda: F_iterative(n), number=10)
+        results.append((n, tr, ti))
 
-results = []
-for i in range(2, 20):
-    try:
-        t_rec = timeit.timeit(lambda: F_rec(i), number=1)
-    except RecursionError:
-        t_rec = None
-    t_itr = timeit.timeit(lambda: F_G_iter(i), number=1)
-    results.append((i, t_rec, t_itr))
+    print(f"{' n':>4} | {'Рекурсивное время (сек)':>12} | {'Итеративное время (сек)':>12}")
+    print("-" * 42)
+    for n, tr, ti in results:
+        print(f"{n:4d} | {tr:12.6f} | {ti:12.6f}")
 
-df = pd.DataFrame(results, columns=["n", "Рекурсивное время (сек)", "Итеративное время (сек)"])
-print(df)
+    xs = [r[0] for r in results]
+    yr = [r[1] for r in results]
+    yi = [r[2] for r in results]
 
-plt.figure(figsize=(10, 6))
-plt.plot(df["n"], df["Рекурсивное время (сек)"], label="Рекурсия", marker='o', color='blue')
-plt.plot(df["n"], df["Итеративное время (сек)"], label="Итерация", marker='s', color='green')
-plt.xlabel("n")
-plt.ylabel("Время (сек)")
-plt.title("Сравнение времени: рекурсивный vs итеративный подход")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+    plt.figure(figsize=(10, 6))
+    plt.plot(xs, yr, '--o', label='Рекурсивный')
+    plt.plot(xs, yi,  '-o', label='Итеративный')
+    plt.xlabel('n')
+    plt.ylabel('Время (с)')
+    plt.title('Сравнение времени вычисления F(n)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__ == '__main__':
+    main()
 
