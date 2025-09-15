@@ -23,7 +23,7 @@ def F_iterative(n):
 
 def main():
     start_n = 1
-    end_n = 25
+    end_n = 19
     results = []
     for n in range(start_n, end_n + 1):
         tr = timeit.timeit(lambda: F_recursive(n), number=10)
@@ -51,4 +51,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
