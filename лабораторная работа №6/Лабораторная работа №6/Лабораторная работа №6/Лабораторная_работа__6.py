@@ -13,13 +13,14 @@ def F_recursive(n):
 def F_iterative(n):
     if n < 2:
         return 1
-    f2, f1 = 1, 1
+    f_prev2 = 1
+    f_prev1 = 1  
     fact = 2
     for i in range(2, n + 1):
         fact *= (2*i - 1) * (2*i)
-        cur = sign(i) * (f1 / fact - math.cos(f2 + 2))
-        f2, f1 = f1, cur
-    return f1
+        cur = sign(i) * (f_prev1 / fact - math.cos(f_prev2 + 2))
+        f_prev2, f_prev1 = f_prev1, cur
+    return f_prev1
 
 def main():
     start_n = 1
@@ -51,5 +52,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
